@@ -5,14 +5,18 @@ DIRECTIONS=<<-END
 END
 
 floor = 0
-
+steps_count = 0
+enter_basement = nil
 DIRECTIONS.each_char do |d|
   case d
   when '('
     floor += 1
+    steps_count +=1
   when ')'
     floor -= 1
+    steps_count +=1
   end
+  enter_basement = steps_count if !enter_basement && floor == -1
 end
 
-puts floor
+puts floor, enter_basement

@@ -3,11 +3,16 @@ require 'digest'
 
 SECRET='yzbqklnj'
 
-COND=/^0{5}.+/
-n = 0
-hash=''
-until COND.match(hash)
-  n+=1
-  hash = Digest::MD5.hexdigest "#{SECRET}#{n}"
+def nmbr(count)
+  cond=Regexp.new("^0{#{count}}.+")
+  n = 0
+  hash=''
+  until cond.match(hash)
+    n+=1
+    hash = Digest::MD5.hexdigest "#{SECRET}#{n}"
+  end
+  n
 end
-puts hash, n
+
+puts nmbr(5)
+puts nmbr(6)
