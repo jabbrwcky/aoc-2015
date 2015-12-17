@@ -2,6 +2,7 @@
 
 class Reindeer
   attr_reader :total_distance, :total_time, :name, :racing
+  attr_accessor :score
 
   def initialize (name, speed, endurance, rest)
     @name= name
@@ -11,6 +12,7 @@ class Reindeer
     @moving=0
     @resting=0
     @total_distance=0
+    @score=0
     @total_time=0
     @racing=true
   end
@@ -23,14 +25,12 @@ class Reindeer
       @moving += 1
       @total_distance += @speed
       if @moving == @endurance
-        # puts "#{name} needs a rest"
         @racing = false
         @moving = 0
       end
     else
       @resting += 1
       if @resting == @rest
-        # puts "#{name} finished resting"
         @racing = true
         @resting = 0
       end
@@ -75,10 +75,11 @@ REINDEERS = [
 puts "0,#{REINDEERS.map(&:name).join(',')}"
 for t in 1..RACE_TIME do
   REINDEERS.each{ |r| r.race }
-
+  leader_distance = REINDEERS.map{ |r| r.total_distance }.max
+  REINDEERS.each{ |r| r.score += 1 if r.total_distance == leader_distance }
   puts "#{t},#{REINDEERS.map{ |r| "#{r.total_distance} (#{r.racing ? '*' : ' ' })"}.join(',')}"
-  # puts "Second: #{t}: Leader: #{leader.name} (#{leader.total_distance})"
 end
 
 leader = REINDEERS.sort.reverse[0]
-puts "Winner after #{RACE_TIME} seconds is: #{leader.name} with a distance of #{leader.total_distance}"
+puts "Leader after #{RACE_TIME} seconds is: #{leader.name} with a distance of #{leader.total_distance}"
+REINDEERS.sort_by{ |r| r.score }.reverse.each_with_index { |e, i| puts "#{i}: #{e.name} (#{e.score})"  }
